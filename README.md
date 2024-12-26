@@ -21,5 +21,5 @@ Make sure you have the following models accessible in your huggingface account:
 
 ## Running the benchmark
 ```bash
-python main.py
+python main.py -o "OUTPUT_DIR"
 ```
