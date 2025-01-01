@@ -1,0 +1,6 @@
+diffusers[torch]
+transformers
+huggingface_hub
+sentencepiece
+protobuf
+git+https://github.com/huggingface/optimum-benchmark.git

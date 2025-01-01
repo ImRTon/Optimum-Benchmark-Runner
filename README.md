@@ -3,11 +3,7 @@ A simple benchmark runner for the [Optimum-benchmark](https://github.com/hugging
 
 ## Installation
 ```bash
-pip install diffusers[torch]
-pip install transformers
-pip install huggingface_hub
-pip install sentencepiece
-pip install git+https://github.com/huggingface/optimum-benchmark.git
+pip install -r requirements.txt
 ```
 
 ## Preparing the benchmark
