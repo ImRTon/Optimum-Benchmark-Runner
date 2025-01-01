@@ -38,7 +38,7 @@ MODELS = {
         {
             "stable-diffusion-v1-5/stable-diffusion-v1-5": {
                 "bs": [1],
-                "train": True,
+                "train": False,
                 "dtype": ["float16", "bfloat16"]
             }, "stabilityai/stable-diffusion-xl-base-1.0": {
                 "bs": [1],
