@@ -1,6 +1,7 @@
 import argparse
 import os
 import json
+import torch
 
 from pathlib import Path
 from optimum_benchmark import Benchmark, BenchmarkConfig, InferenceConfig, TrainingConfig, ProcessConfig, PyTorchConfig
@@ -34,11 +35,16 @@ def run_benchmark(scenario_config, launcher_config, backend_config, name, output
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output_dir", default="outputs", help="Results output directory.")
+    parser.add_argument("-o", "--output_dir", default="outputs", help="Results output directory.")
+    parser.add_argument("-d", "--device", default="cuda", help="Device to run.", 
+                        choices=["cuda", "cpu", "mps", "xla", "gpu", "xpu"])
     return parser.parse_args()
 
 def main():
     args = get_args()
+
+    device = args.device
+
     level = os.environ.get("LOG_LEVEL", "INFO")
     to_file = os.environ.get("LOG_TO_FILE", "0") == "1"
     setup_logging(level=level, to_file=to_file, prefix="MAIN-PROCESS")
@@ -46,7 +52,10 @@ def main():
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    launcher_config = ProcessConfig(device_isolation=True, device_isolation_action="warn")
+    launcher_config = ProcessConfig(
+        device_isolation=True if device=="cuda" else False, 
+        device_isolation_action="warn"
+    )
 
     for model_type, models in MODELS.items():
         for model_name, model_config in models.items():
@@ -56,7 +65,7 @@ def main():
             for bs in model_config["bs"]:
                 for dtype in model_config["dtype"]:
                     backend_config = PyTorchConfig(
-                        device="cuda",
+                        device=device,
                         device_ids="0", 
                         no_weights=True if model_type != "Diffusion" else False, 
                         model=MODEL, 
